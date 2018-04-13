@@ -79,19 +79,19 @@ cmd;dtvs;iacs,svpp;app
 MySQL_Var :
 
 binlog_format[ROW] character_set_server[utf8] enforce_gtid_consistency[ON]
-      gtid_mode[ON] log_bin[ON] max_allowed_packet[4194304]
-      max_binlog_cache_size[17179869184G] max_binlog_size[1G] max_connect_errors[100000]
-      max_connections[10000] max_user_connections[9990] open_files_limit[50000]
-      skip_name_resolve[ON] sync_binlog[0] table_definition_cache[912]
-      table_open_cache[1024] thread_cache_size[64] wait_timeout[31536000]
+	  gtid_mode[ON] log_bin[ON] max_allowed_packet[4194304]
+	  max_binlog_cache_size[17179869184G] max_binlog_size[1G] max_connect_errors[100000]
+	  max_connections[10000] max_user_connections[9990] open_files_limit[50000]
+	  skip_name_resolve[ON] sync_binlog[0] table_definition_cache[912]
+	  table_open_cache[1024] thread_cache_size[64] wait_timeout[31536000]
 
 
 innodb_adaptive_flushing[ON] innodb_adaptive_hash_index[ON] innodb_buffer_pool_size[4G]
-      innodb_file_per_table[ON] innodb_flush_log_at_trx_commit[2] innodb_flush_method[O_DIRECT]
-      innodb_io_capacity[200] innodb_lock_wait_timeout[5] innodb_log_buffer_size[16M]
-      innodb_log_file_size[2G] innodb_log_files_in_group[2] innodb_max_dirty_pages_pct[75.000000]
-      innodb_open_files[1024] innodb_read_io_threads[4] innodb_thread_concurrency[64]
-      innodb_write_io_threads[4]
+	  innodb_file_per_table[ON] innodb_flush_log_at_trx_commit[2] innodb_flush_method[O_DIRECT]
+	  innodb_io_capacity[200] innodb_lock_wait_timeout[5] innodb_log_buffer_size[16M]
+	  innodb_log_file_size[2G] innodb_log_files_in_group[2] innodb_max_dirty_pages_pct[75.000000]
+	  innodb_open_files[1024] innodb_read_io_threads[4] innodb_thread_concurrency[64]
+	  innodb_write_io_threads[4]
 
 -------------------------------------- show full processlist --------------------------------------
 ---------------------------------------------------------------------------------------------------
