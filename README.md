@@ -4,7 +4,7 @@ dba心电图
 
 基于orzdba脚本修改，添加用户名和帐号以及“Show Full Processlist”参数
  
- 
+```
 Usage :
 Command line options :
 
@@ -52,3 +52,4 @@ Sample :
 	shell> ./orzdba -u xxxxx -p xxxxx -innodb  -C 5 -i 2  2>/dev/null
 	shell> ./orzdba -u xxxxx -p xxxxx -lazy -d sda -C 5 -i 2 2>/dev/null
 	shell> nohup ./orzdba -u xxxxx -p xxxxx  -lazy -d sda -C 5 -i 2 -L /tmp/orzdba.log  > /dev/null 2>&1 &
+```
