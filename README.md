@@ -49,7 +49,7 @@ Command line options :
 	                     and is valid with -L.
 
 Sample :
-	shell> ./orzdba -u xxxxx -p xxxxx -innodb  -C 5 -i 2  2>/dev/null
-	shell> ./orzdba -u xxxxx -p xxxxx -lazy -d sda -C 5 -i 2 2>/dev/null
-	shell> nohup ./orzdba -u xxxxx -p xxxxx  -lazy -d sda -C 5 -i 2 -L /tmp/orzdba.log  > /dev/null 2>&1 &
+	shell> ./dbaECG -u xxxxx -p xxxxx -innodb  -C 5 -i 2  2>/dev/null
+	shell> ./dbaECG -u xxxxx -p xxxxx -lazy -d sda -C 5 -i 2 2>/dev/null
+	shell> nohup ./dbaECG -u xxxxx -p xxxxx  -lazy -d sda -C 5 -i 2 -L /tmp/dbaECG.log  > /dev/null 2>&1 &
 ```
