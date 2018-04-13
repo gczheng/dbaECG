@@ -37,8 +37,8 @@ Command line options :
 	 -innodb_pages       Print Innodb Buffer Pool Pages Status(Innodb_buffer_pool_pages_data/free/dirty/flushed)
 	 -innodb_data        Print Innodb Data Status(Innodb_data_reads/writes/read/written)
 	 -innodb_log         Print Innodb Log  Status(Innodb_os_log_fsyncs/written)
-	 -innodb_status      Print Innodb Status from Command: 'Show Engine Innodb Status'
-                           (history list/ log unflushed/uncheckpointed bytes/ read views/ queries inside/queued)
+	 -innodb_status      Print Innodb Status from Command: 'Show Engine Innodb Status';
+	                     (history list/ log unflushed/uncheckpointed bytes/ read views/ queries inside/queued)
 
 	 -T,--threads        Print Threads Status(Threads_running,Threads_connected,Threads_created,Threads_cached).
 	 -B,--bytes          Print Bytes received from/send to MySQL(Bytes_received,Bytes_sent).
