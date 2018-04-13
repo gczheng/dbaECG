@@ -2,8 +2,8 @@
 # line：        V1.0
 # authors:      gczheng
 # mail:         gczheng@139.com
-# data:         2018-04-09
-# file_name:
+# data:         2018-04-13
+# file_name:	dbaECG
 # remarks:
 
 
@@ -285,8 +285,10 @@ Command line options :
 	                     and is valid with -L.
 
 Sample :
-	shell> nohup ./orzdba -lazy -d sda -C 5 -i 2 -L /tmp/orzdba.log  > /dev/null 2>&1 &
-	shell> nohup ./orzdba -u xxxxx -p xxxxx -innodb  -C 5 -i 2  2>/dev/null
+	shell> ./dbaECG -u xxxxx -p xxxxx -innodb  -C 5 -i 2  2>/dev/null
+	shell> ./dbaECG -u xxxxx -p xxxxx -lazy -d sda -C 5 -i 2 2>/dev/null
+	shell> ./dbaECG -u xxxxx -p xxxxx -processlist -C 5 -i 2 2>/dev/null
+	shell> nohup ./dbaECG -u xxxxx -p xxxxx  -lazy -d sda -C 5 -i 2 -L /tmp/dbaECG.log  > /dev/null 2>&1 &
 ==========================================================================================
 EOF
 				exit;
@@ -483,8 +485,7 @@ sub print_title {
 				print $LOG_OUT GREEN();
 				print $LOG_OUT <<EOF;
 .=================================================.
-|          Welcome to use the dba tool !          |
-
+|          Welcome to use the dba  ECG !          |
 EOF
 				print $LOG_OUT GREEN(),"'=============== ";
 				print $LOG_OUT RED(),"Date : ",strftime ("%Y-%m-%d", localtime);
