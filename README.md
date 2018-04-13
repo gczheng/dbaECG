@@ -2,13 +2,15 @@
 dba心电图
 ========================================================================================================================
 
-基于orzdba脚本修改，添加用户名和帐号以及“Show Full Processlist”参数
+基于orzdba perl脚本修改，添加,MySQL用户名、帐号、主机IP参数和“Show Full Processlist”参数
  
 ```
+Info  :
+	  Created by gczheng@139.com
 Usage :
 Command line options :
 
-	 -h,--help           Print Help Info.
+	 -I,--help           Print Help Info.
 	 -i,--interval       Time(second) Interval.
 	 -C,--count          Times.
 	 -t,--time           Print The Current Time.
@@ -24,6 +26,7 @@ Command line options :
 	 -P                  MySQL Password(default iforgot).
 	 -P,--port           Port number to use for mysql connection(default 3306).
 	 -S,--socket         Socket file to use for mysql connection.
+	 -h,--host           Host (hostname/IP).
 
 	 -mysql              Print MySQLInfo (include -t,-com,-hit,-T,-B).
 	 -innodb             Print InnodbInfo(include -t,-innodb_pages,-innodb_data,-innodb_log,-innodb_status)
@@ -51,7 +54,7 @@ Command line options :
 Sample :
 	shell> ./dbaECG -u xxxxx -p xxxxx -innodb  -C 5 -i 2  2>/dev/null
 	shell> ./dbaECG -u xxxxx -p xxxxx -lazy -d sda -C 5 -i 2 2>/dev/null
-	shell> ./dbaECG -u xxxxx -p xxxxx -processlist -C 5 -i 2 2>/dev/null
+	shell> ./dbaECG -h xxxxx -u xxxxx -p xxxxx -processlist -C 5 -i 2 2>/dev/null
 	shell> nohup ./dbaECG -u xxxxx -p xxxxx  -lazy -d sda -C 5 -i 2 -L /tmp/dbaECG.log  > /dev/null 2>&1 &
 ```
 
@@ -59,20 +62,31 @@ processlist参数会把sleep线程过滤掉，保留活动线程
 
 
 ```
-	shell> ./dbaECG  -u monitor -p xxxxx  -processlist -C 5 -i 2  2>/dev/null
-
+	shell> ./dbaECG  -u monitor -p xxxxx  -h xxxxx -mysql -C 5 -i 2  2>/dev/null
+	
 .=================================================.
-|          Welcome to use the dba ECG !           |
+|          Welcome to use the dba  ECG !          |
 '=============== Date : 2018-04-13 ==============='
 
-HOST: mycat01.mysql.com   IP: 192.168.49.246
-DB  : performance_schema|sys
-Var : binlog_format[ROW] max_binlog_cache_size[17179869184G] max_binlog_size[1G]
-      max_connect_errors[100000] max_connections[10000] max_user_connections[9990]
-      open_files_limit[50000] sync_binlog[0] table_definition_cache[912]
-      table_open_cache[1024] thread_cache_size[64]
+Local_Host: mycat01.mysql.com   Local_IP: 192.168.99.100
 
-      innodb_adaptive_flushing[ON] innodb_adaptive_hash_index[ON] innodb_buffer_pool_size[4G]
+MySQL_Host: 192.168.99.100
+
+MySQL_DB  :
+
+cmd;dtvs;iacs,svpp;app
+
+MySQL_Var :
+
+binlog_format[ROW] character_set_server[utf8] enforce_gtid_consistency[ON]
+      gtid_mode[ON] log_bin[ON] max_allowed_packet[4194304]
+      max_binlog_cache_size[17179869184G] max_binlog_size[1G] max_connect_errors[100000]
+      max_connections[10000] max_user_connections[9990] open_files_limit[50000]
+      skip_name_resolve[ON] sync_binlog[0] table_definition_cache[912]
+      table_open_cache[1024] thread_cache_size[64] wait_timeout[31536000]
+
+
+innodb_adaptive_flushing[ON] innodb_adaptive_hash_index[ON] innodb_buffer_pool_size[4G]
       innodb_file_per_table[ON] innodb_flush_log_at_trx_commit[2] innodb_flush_method[O_DIRECT]
       innodb_io_capacity[200] innodb_lock_wait_timeout[5] innodb_log_buffer_size[16M]
       innodb_log_file_size[2G] innodb_log_files_in_group[2] innodb_max_dirty_pages_pct[75.000000]
@@ -81,19 +95,21 @@ Var : binlog_format[ROW] max_binlog_cache_size[17179869184G] max_binlog_size[1G]
 
 -------------------------------------- show full processlist --------------------------------------
 ---------------------------------------------------------------------------------------------------
-####################################### 2018-04-13 10:52:37 #####################################>
- 11036	monitor	localhost	NULL	Query	0	starting	show full processlist
+####################################### 2018-04-13 16:10:33 #####################################>
+ 11436	monitor	192.168.99.100:57814	NULL	Query	0	starting	show full processlist
 
-####################################### 2018-04-13 10:52:39 #####################################>
- 11037	monitor	localhost	NULL	Query	0	starting	show full processlist
+####################################### 2018-04-13 16:10:35 #####################################>
+ 11437	monitor	192.168.99.100:57816	NULL	Query	0	starting	show full processlist
 
-####################################### 2018-04-13 10:52:41 #####################################>
- 11038	monitor	localhost	NULL	Query	0	starting	show full processlist
+####################################### 2018-04-13 16:10:37 #####################################>
+ 11438	monitor	192.168.99.100:57818	NULL	Query	0	starting	show full processlist
 
-####################################### 2018-04-13 10:52:43 #####################################>
- 11039	monitor	localhost	NULL	Query	0	starting	show full processlist
+####################################### 2018-04-13 16:10:39 #####################################>
+ 11439	monitor	192.168.99.100:57820	NULL	Query	0	starting	show full processlist
 
-####################################### 2018-04-13 10:52:45 #####################################>
- 11040	monitor	localhost	NULL	Query	0	starting	show full processlist
+####################################### 2018-04-13 16:10:41 #####################################>
+ 11440	monitor	192.168.99.100:57822	NULL	Query	0	starting	show full processlist
+
+
 
 ```

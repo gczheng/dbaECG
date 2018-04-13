@@ -50,6 +50,7 @@ my $logfile_by_day ;   # -logfile_by_day : one day a logfile
 my $net;               # -n   : print net info
 my $user="root";       # -u
 my $pass="iforgot";    # -p
+my $host       ;       # -h
 my $port = 3306;       # -P
 my $socket     ;       # -S
 my $dbrt = 0;          # -rt
@@ -158,6 +159,7 @@ $SIG{INT} = \&catch_zap;
 #
 my $MYSQL    = qq{mysql -s --skip-column-names -u$user -p$pass -P$port };
 $MYSQL      .= qq{-S$socket } if defined $socket;
+$MYSQL      .= qq{-h$host } if defined $host;
 my $TCPRSTAT = "/usr/bin/tcprstat --no-header -t 1 -n 0 -p $port";
 
 &print_title();
@@ -244,7 +246,7 @@ Info  :
 Usage :
 Command line options :
 
-	 -h,--help           Print Help Info.
+	 -I,--help           Print Help Info.
 	 -i,--interval       Time(second) Interval.
 	 -C,--count          Times.
 	 -t,--time           Print The Current Time.
@@ -260,7 +262,7 @@ Command line options :
 	 -P                  MySQL Password(default iforgot).
 	 -P,--port           Port number to use for mysql connection(default 3306).
 	 -S,--socket         Socket file to use for mysql connection.
-
+	 -h,--host           Host (hostname/IP).
 	 -mysql              Print MySQLInfo (include -t,-com,-hit,-T,-B).
 	 -innodb             Print InnodbInfo(include -t,-innodb_pages,-innodb_data,-innodb_log,-innodb_status)
 	 -com                Print MySQL Status(Com_select,Com_insert,Com_update,Com_delete).
@@ -287,7 +289,7 @@ Command line options :
 Sample :
 	shell> ./dbaECG -u xxxxx -p xxxxx -innodb  -C 5 -i 2  2>/dev/null
 	shell> ./dbaECG -u xxxxx -p xxxxx -lazy -d sda -C 5 -i 2 2>/dev/null
-	shell> ./dbaECG -u xxxxx -p xxxxx -processlist -C 5 -i 2 2>/dev/null
+	shell> ./dbaECG -h xxxx -u xxxxx -p xxxxx -processlist -C 5 -i 2 2>/dev/null
 	shell> nohup ./dbaECG -u xxxxx -p xxxxx  -lazy -d sda -C 5 -i 2 -L /tmp/dbaECG.log  > /dev/null 2>&1 &
 ==========================================================================================
 EOF
@@ -301,7 +303,7 @@ EOF
 sub get_options{
 				# Get options info
 				GetOptions(\%opt,
-												'h|help',           # OUT : print help info
+												'I|help',           # OUT : print help info
 												'i|interval=i',     # IN  : time(second) interval
 												't|time',           # OUT : print current time
 												'sys',              # OUT : print SysInfo (include -l,-c,-s)
@@ -326,6 +328,7 @@ sub get_options{
 												'u|user=s',         # IN  : user
 												'p|pass=s',         # IN  : pass
 												'P|port=i',         # IN  : port
+												'h|host=s',         # IN  : host
 												'S|socket=s',       # IN  : socket
 												'C|count=i',        # IN  : times
 												'L|logfile=s',      # IN  : path of logfile
@@ -339,7 +342,7 @@ sub get_options{
 				}
 
 				# Handle for options
-				$opt{'h'}   and print_usage();
+				$opt{'I'}   and print_usage();
 				$opt{'i'}   and $interval = $opt{'i'};
 				$opt{'t'}   and $timeFlag = 1;
 				$opt{'C'}   and $count = $opt{'C'};
@@ -357,6 +360,7 @@ sub get_options{
 				$opt{'p'}   and $pass = $opt{'p'};
 				$opt{'u'}   and $user = $opt{'u'};
 				$opt{'S'}   and $socket = $opt{'S'};
+				$opt{'h'}   and $host = $opt{'h'};
 				$opt{'sys'} and $load= 1 and $cpu=1 and $timeFlag=1 and $swap = 1;
 				$opt{'innodb_rows'}   and $innodb_rows = 1   and $mysql = 1;
 				$opt{'processlist'}   and $processlist = 1   and $mysql = 1;
@@ -497,23 +501,25 @@ EOF
 				# Get Hostname and IP
 				chomp (my $hostname = `hostname` );
 				my $ip = inet_ntoa((gethostbyname($hostname))[4]);
-				print $LOG_OUT RED(), "HOST: ",YELLOW(),$hostname,RED(),"   IP: ",YELLOW(),$ip,RESET(),"\n";
+				print $LOG_OUT RED(), "Local_Host: ",WHITE(),$hostname,RED(),"   Local_IP: ",WHITE(),$ip,RESET(),"\n\n";
 
 				$TCPRSTAT .= " -l $ip";
 
 				# Get MYSQL DB Name and Variables
 				if ($mysql) {
-								my $mysqldb_sql = qq{$MYSQL -e 'show databases' | grep -iwvE "information_schema|mysql|test" | tr "\n" "|"};
-								my $db_name = `$mysqldb_sql`;
+								print $LOG_OUT RED(),"MySQL_Host: ",YELLOW(),$host,"\n\n";
+								
+								my $mysqldb_sql2 = qq{$MYSQL -e 'show databases' | grep -iwvE "information_schema|mysql|test|sys|performance_schema" | tr "\n" "; "};
+								my $db_name = `$mysqldb_sql2`;
 								chop($db_name);
-								print $LOG_OUT RED(),"DB  : ",YELLOW(),$db_name,RESET(),"\n";
+								print $LOG_OUT RED(),"MySQL_DB  : ","\n\n",YELLOW(),$db_name,RESET(),"\n\n";
 
 								# Get MySQL Variables
-								my $mysql = qq{$MYSQL -e 'show variables where Variable_name in ("sync_binlog","max_connections","max_user_connections","max_connect_errors","table_open_cache","table_definition_cache","thread_cache_size","binlog_format","open_files_limit","max_binlog_size","max_binlog_cache_size")'};
+								my $mysql = qq{$MYSQL -e 'show variables where Variable_name in ("sync_binlog","max_connections","max_user_connections","max_connect_errors","table_open_cache","table_definition_cache","thread_cache_size","binlog_format","open_files_limit","max_binlog_size","max_binlog_cache_size","max_allowed_packet","skip_name_resolve","character_set_server","gtid_mode","enforce_gtid_consistency","log_bin","wait_timeout")'};
 								open MYSQL_VARIABLES,"$mysql|" or die "Can't connect to mysql!";
-								print $LOG_OUT RED(),"Var : ",RESET();
+								print $LOG_OUT RED(),"MySQL_Var : ",RESET(),"\n\n";
 								&print_vars();
-								print $LOG_OUT "\n\n      ";
+								print $LOG_OUT "\n\n";
 
 								$mysql = qq{$MYSQL -e 'show variables where Variable_name in ("innodb_flush_log_at_trx_commit","innodb_flush_method","innodb_buffer_pool_size","innodb_max_dirty_pages_pct","innodb_log_buffer_size","innodb_log_file_size","innodb_log_files_in_group","innodb_thread_concurrency","innodb_file_per_table","innodb_adaptive_hash_index","innodb_open_files","innodb_io_capacity","innodb_read_io_threads","innodb_write_io_threads","innodb_adaptive_flushing","innodb_lock_wait_timeout","innodb_log_files_in_group")'};
 								open MYSQL_VARIABLES,"$mysql|" or die "Can't connect to mysql!";
